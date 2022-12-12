@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
-
+from ..db import connect_db
+from ..models import Employee
 
 employee_bp = Blueprint('employee', __name__, url_prefix='/employee')
 
@@ -17,10 +18,20 @@ def get_employee():
 
 @employee_bp.route('/', methods=['POST'])
 def add_employee():
-    pass
+    # print(request.form['id'])
+    # print(request.args.get('id') )
+    db = connect_db()
+    cursor = db.cursor()
+    query = "INSERT INTO Employee VALUES(3, 'shree', 'raj', 'sggs@mail.com','Opcito123', '5235235', 'trainee', true, false, null,null,null,null)"
+    try:
+        cursor.execute(query)
+    except:
+        print('some err')
+    db.commit()
+    return 202
 
 
-@employee_bp.route('/<int:id>', methods=['PUT'])
+@employee_bp.route('/', methods=['PUT'])
 def update_employee():
     pass
 
