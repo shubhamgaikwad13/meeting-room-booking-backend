@@ -1,17 +1,29 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, request
+import json
 from ..db import connect_db
-from ..models import Employee
+from ..models.Employee import Employee
 
 employee_bp = Blueprint('employee', __name__, url_prefix='/employee')
 
 
 @employee_bp.route('/', methods=['GET'])
 def get_employees():
-    output = {'msg': 'hi employee'}
-    return jsonify(output)
+    db = connect_db()
+    cursor = db.cursor()
+
+    query = '''SELECT * FROM Employee'''
+
+    try:
+        cursor.execute(query)
+        employees = cursor.fetchall() 
+        return Employee.get_employees(employees)
+    except:
+        print('Failed to select records')
+        return "404"
+    
 
 
-@employee_bp.route('/', methods=['GET'])
+@employee_bp.route('/<int:id>', methods=['GET'])
 def get_employee():
     pass
 
@@ -28,10 +40,12 @@ def add_employee():
     
     try:
         cursor.execute(query, params)
+        db.commit()
+        return "202"
     except:
         print('Failed to insert record')
-    db.commit()
-    return "202"
+        return "404"
+
 
 
 @employee_bp.route('/', methods=['PUT'])
