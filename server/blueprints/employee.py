@@ -18,17 +18,20 @@ def get_employee():
 
 @employee_bp.route('/', methods=['POST'])
 def add_employee():
-    # print(request.form['id'])
-    # print(request.args.get('id') )
     db = connect_db()
     cursor = db.cursor()
-    query = "INSERT INTO Employee VALUES(3, 'shree', 'raj', 'sggs@mail.com','Opcito123', '5235235', 'trainee', true, false, null,null,null,null)"
+
+    query = '''INSERT INTO Employee(_id, first_name, last_name, email, password, phone, designation, is_admin) 
+                VALUES (%(_id)s, %(first_name)s, %(last_name)s, %(email)s, %(password)s, %(phone)s, %(designation)s, %(is_admin)s)'''
+   
+    params = dict(**request.args)
+    
     try:
-        cursor.execute(query)
+        cursor.execute(query, params)
     except:
-        print('some err')
+        print('Failed to insert record')
     db.commit()
-    return 202
+    return "202"
 
 
 @employee_bp.route('/', methods=['PUT'])
