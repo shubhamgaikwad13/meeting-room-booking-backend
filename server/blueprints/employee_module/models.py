@@ -12,8 +12,6 @@ class Employee:
         self.designation = designation
         self.is_active = is_active
         self.is_admin = is_admin
-        print("constructor")
-
 
     @staticmethod
     def get_employees(employees):
@@ -32,8 +30,10 @@ class Employee:
             data.append(emp_dict)
         return json.dumps(data)
 
-    def demo():
-        pass
+    @staticmethod
+    def get_employee(employee):
+        return json.dumps(employee, default=str)
+
 
 
 
