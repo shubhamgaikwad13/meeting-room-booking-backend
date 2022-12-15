@@ -57,7 +57,11 @@ CREATE TABLE `Meeting` (
 	`start_time` TIME NOT NULL,
 	`end_time` TIME NOT NULL,
 	`summary` TEXT,
-	`room_id` int NOT NULL
+	`room_id` int NOT NULL,
+	`created_by` int references Employee(_id),
+    `created_at` timestamp default current_timestamp,
+    `updated_by` int references Employee(_id),
+    `updated_at` timestamp default current_timestamp
 );
 
 CREATE TABLE `MeetingMember` (
