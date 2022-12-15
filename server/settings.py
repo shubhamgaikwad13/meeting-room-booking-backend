@@ -13,4 +13,5 @@ DATABASE_URI = {
     'database': os.environ.get("DATABASE_NAME"),
 }
 
+SECRET_KEY = os.environ.get("JWT_KEY")
 # print(DATABASE_URI)

@@ -47,7 +47,7 @@ CREATE TABLE `Team` (
 CREATE TABLE `TeamMember` (
 	`_id` serial primary key,
 	`team_id` int references Team(_id),
-	`employee_id` int references Employee(_id)
+	`employee_id` int references Employee(_id),
 );
 
 CREATE TABLE `Meeting` (
@@ -66,3 +66,5 @@ CREATE TABLE `MeetingMember` (
 	`team_id` int references Team(_id),
 	`attendee_id` int references Employee(_id)
 );
+
+

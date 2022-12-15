@@ -23,7 +23,7 @@ def get_employees():
     
 
 
-@employee_bp.route('/<int:id>', methods=['GET'])
+@employee_bp.route('/<id>', methods=['GET'])
 def get_employee():
     pass
 
@@ -53,6 +53,6 @@ def update_employee():
     pass
 
 
-@employee_bp.route('/<int:id>', methods=['DELETE'])
+@employee_bp.route('/<id>', methods=['DELETE'])
 def delete_employee():
     pass
