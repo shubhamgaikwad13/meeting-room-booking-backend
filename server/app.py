@@ -1,5 +1,5 @@
 from flask import Flask
-from .blueprints import employee
+from .blueprints.employee_module import employee
 
 
 app = Flask(__name__)
