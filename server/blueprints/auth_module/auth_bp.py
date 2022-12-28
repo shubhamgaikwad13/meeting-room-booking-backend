@@ -70,6 +70,6 @@ def login():
         return {'token' : token.decode('UTF-8')}
 
     # print("request: ",request.get_data())
-    return ""
+    return "ok"
     
             
