@@ -1,3 +1,4 @@
 .env
 Pipfile.lock
-
+*.log
+bootstrap.sh
