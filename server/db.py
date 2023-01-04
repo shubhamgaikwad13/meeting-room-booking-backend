@@ -1,12 +1,15 @@
 from os import environ
 import mysql.connector
-from .settings import DATABASE_URI
-from flask import g
+# from .settings import DATABASE_URI
+from flask import g, current_app
 
 
 def connect_db():
+    with current_app.app_context():
+        print("db-config", current_app.config)
     if not hasattr(g, 'mysql_db'):
-        g.mysql_db = mysql.connector.connect(**DATABASE_URI)
+        g.mysql_db = mysql.connector.connect(
+            **(current_app.config["DATABASE_URI"]))
     return g.mysql_db
 
 # #.env
@@ -14,5 +17,3 @@ def connect_db():
 # DATABASE_USER = "shubham"
 # DATABASE_PASSWORD = ""
 # DATABASE_NAME  = "meeting_room"
-
-
