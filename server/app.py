@@ -1,10 +1,10 @@
 from flask import Flask
-from .blueprints.employee_module import employee
+from .blueprints.employee_module.employee import employee_bp
 
 
 app = Flask(__name__)
 
-app.register_blueprint(employee.employee_bp)
+app.register_blueprint(employee_bp)
 
 
 @app.route("/")

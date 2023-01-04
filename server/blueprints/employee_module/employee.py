@@ -1,4 +1,4 @@
-from flask import Blueprint, request,g
+from flask import Blueprint, request,g, jsonify
 from ...db import connect_db
 # from ...models.Employee import Employee
 from .models import Employee
@@ -49,16 +49,16 @@ def add_employee():
     cursor = db.cursor()
 
     query = '''INSERT INTO Employee(_id, first_name, last_name, email, password, phone, designation, is_admin) 
-                VALUES (%(_id)s, %(first_name)s, %(last_name)s, %(email)s, %(password)s, %(phone)s, %(designation)s, %(is_admin)s)'''
+                VALUES (%(_id)s, %(first_name)s, %(last_name)s, %(email)s, %(password)s, %(phone)s, %(designation)s, %(is_admin)s);'''
 
     
     try:
         cursor.execute(query, request.get_json())
         db.commit()
-        return "200"
-    except:
+        return "201"
+    except Exception as e:
         print('Failed to insert record')
-        return "404"
+        return {"error" : str(e)}
 
 
 @employee_bp.route('/<id>', methods=['DELETE'])
