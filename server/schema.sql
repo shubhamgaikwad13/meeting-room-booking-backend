@@ -4,7 +4,7 @@ create table `Employee`(
     `last_name` varchar(50) not null,
     `email` varchar(100) not null unique,
     `password` varchar(256) not null, 
-    `phone` varchar(15) not null,
+    `phone` varchar(15) not null unique,
     `designation` varchar(50) not null,
     `is_active` boolean not null default true,
     `is_admin` boolean not null default false,
