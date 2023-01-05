@@ -49,7 +49,7 @@ def login():
     cursor = db.cursor()
     
     if not user_credentials or not user_credentials['email'] or not user_credentials['password']:
-        return {status: 404, message: "Login credentials required"}
+        return {"status": 404, "message": "Login credentials required"}
 
     is_user_query = "SELECT email, password FROM Employee WHERE email=%(email)s"
 
