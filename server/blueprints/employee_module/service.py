@@ -9,7 +9,9 @@ EmployeeFields = {
     'email': {'is_required': True, 'type': str},
     'password': {'is_required': True, 'type': str},
     'designation': {'is_required': True, 'type': str},
-    'is_admin': {'is_required': True, 'type': bool}
+    'is_admin': {'is_required': True, 'type': bool},
+    'created_by': {'is_required': True, 'type': str},
+    'updated_by': {'is_required': False, 'type': str}
 }
 
 
@@ -32,10 +34,16 @@ class EmployeeValidation:
             if key == 'phone':
                 EmployeeValidation.validate_phone(params['phone'])
 
-    @staticmethod
     def validate_phone(phone):
         # validate phone
         if len(str(phone)) != 10:
             raise Exception(EMPLOYEE_PHONE_LENGTH)
         if not phone.isdigit():
             raise Exception(EMPLOYEE_PHONE_INVALID)
+
+    @staticmethod
+    def validate_update_request(params):
+        for key, value in params.items():
+            required_type = EmployeeFields[key]['type']
+            if  type(value) is not required_type:
+                raise Exception(f"{key} must be of type {required_type}")
