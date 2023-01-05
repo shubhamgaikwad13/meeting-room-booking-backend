@@ -13,7 +13,7 @@ EMPLOYEE_PASSWORD_REQUIRED = "Employee password is required."
 EMPLOYEE_IS_ADMIN_REQUIRED = "Employee is_admin field is required."
 EMPLOYEE_PHONE_LENGTH = "Employee contact number must be 10 digits."
 EMPLOYEE_PHONE_INVALID = "Employee contact number is not valid."
-
+ONLY_ADMIN_ADDS_USER = "Only admin can add the user."
 
 
 def dup_message(value): return f"Duplicate entry for employee {value}."
