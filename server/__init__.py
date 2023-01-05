@@ -1,6 +1,6 @@
 from flask import Flask
 from .config import ProductionConfig, TestingConfig, DevelopmentConfig
-from .blueprints.employee_module import employee
+from .blueprints.employee_module import controller
 import logging
 
 
@@ -22,6 +22,6 @@ def create_app(test_config=None):
         # Fix werkzeug handler in debug mode
         logging.getLogger('werkzeug').disabled = True
 
-    app.register_blueprint(employee.employee_bp)
+    app.register_blueprint(controller.employee_bp)
 
     return app

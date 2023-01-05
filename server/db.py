@@ -5,8 +5,8 @@ from flask import g, current_app
 
 
 def connect_db():
-    with current_app.app_context():
-        print("db-config", current_app.config)
+    # with current_app.app_context():
+    #     print("db-config", current_app.config)
     if not hasattr(g, 'mysql_db'):
         g.mysql_db = mysql.connector.connect(
             **(current_app.config["DATABASE_URI"]))
@@ -17,3 +17,5 @@ def connect_db():
 # DATABASE_USER = "shubham"
 # DATABASE_PASSWORD = ""
 # DATABASE_NAME  = "meeting_room"
+
+# todos db close
