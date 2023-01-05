@@ -3,7 +3,6 @@ from http import HTTPStatus
 from ...db import connect_db
 from .EmployeeDAO import Employee
 from .service import EmployeeValidation
-
 from .constant import *
 from mysql.connector import errorcode
 from mysql.connector import Error as MySQLError
@@ -16,6 +15,13 @@ employee_bp = Blueprint('employee', __name__, url_prefix='/employee')
 @employee_bp.before_request
 def before_request():
     g.db = connect_db()
+
+
+# closes db connection after each request
+@employee_bp.after_request
+def after_request(response):
+    g.db.close()
+    return response
 
 
 # api for fetching all employees
@@ -56,7 +62,11 @@ def add_employee():
         # validates request parameters and throws exception for invalid params
         EmployeeValidation.validate(params)
 
-        employee = Employee(*params.values())
+        # checks if request is being made by admin
+        if not Employee.is_admin(params['created_by']):
+            raise Exception(ONLY_ADMIN_ADDS_USER)
+
+        employee = Employee(**params)
         employee.save()  # inserts employee record in the database
 
     except MySQLError as err:
@@ -79,6 +89,12 @@ def add_employee():
 @employee_bp.route('/<id>', methods=['DELETE'])
 def delete_employee_by_id(id):
     try:
+        params = request.get_json()
+
+        # checks if request is being made by admin
+        if not Employee.is_admin(params['updated_by']):
+            raise Exception("Only admin can delete the user.")
+
         # if employee exists then deletes otherwise shows error
         employee = Employee.get_employee_by_id(id)
 
@@ -96,23 +112,26 @@ def delete_employee_by_id(id):
 # api for updating employee data - phone, designation, password
 @employee_bp.route('/<id>', methods=['PATCH'])
 def update_employee(id):
-    cursor = g.db.cursor()
-
-    query = '''UPDATE Employee SET '''
-
-    for field in request.get_json().keys():
-        query = query + f'{field}=%({field})s,'
-
-    query = query[:-1] + f'WHERE _id={id}'
+    params = request.get_json()
 
     try:
-        cursor.execute(query, request.get_json())
-        db.commit()
-        return "202"
-    except Exception as e:
-        print(e)
-        return "404"
+        EmployeeValidation.validate_update_request(params)
 
+        # checks if request is being made by admin
+        if not Employee.is_admin(params['updated_by']):
+            raise Exception(ONLY_ADMIN_ADDS_USER)
+        
+        # if employee exists then updates otherwise shows error
+        employee = Employee.get_employee_by_id(id)
+        if employee is None:
+            return make_response(EMPLOYEE_NOT_FOUND), HTTPStatus.BAD_REQUEST
+
+        employee.update(params)
+        return make_response("Employee record updated successfully."), HTTPStatus.OK
+
+    except Exception as e:
+        return make_response(str(e), 'error'), HTTPStatus.BAD_REQUEST
+    
 
 # internal api for fake inserts of employee records
 @employee_bp.route('/fake', methods=['GET'])
@@ -138,4 +157,5 @@ def fake_inserts():
 
         cursor.execute(query, params)
         g.db.commit()
-        print(i)
+
+    return "fake records inserted"
