@@ -2,6 +2,7 @@ from flask import g
 from ...utils import make_response
 from .constant import *
 import re
+from werkzeug.security import generate_password_hash
 
 
 class Employee:
@@ -12,7 +13,7 @@ class Employee:
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
-        self.password = password
+        self.password = generate_password_hash(password)
         self.phone = phone
         self.designation = designation
         self.is_active = is_active

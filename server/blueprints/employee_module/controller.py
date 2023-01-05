@@ -53,6 +53,7 @@ def add_employee():
     params = request.get_json()
 
     try:
+        # validates request parameters and throws exception for invalid params
         EmployeeValidation.validate(params)
 
         employee = Employee(*params.values())

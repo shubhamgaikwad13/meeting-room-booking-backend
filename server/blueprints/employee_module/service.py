@@ -19,9 +19,12 @@ class EmployeeValidation:
     def validate(params):
         # checks if field is required and type is valid or not otherwise raises exception
         for key, value in EmployeeFields.items():
+
+            # if field is required but not passed in request
             if value['is_required'] and params.get(key) is None:
                 raise Exception(field_required(key))
 
+            # checks type of field
             if type(params.get(key)) is not value['type']:
                 raise Exception(f"{key} must be of type {value['type']}")
 
