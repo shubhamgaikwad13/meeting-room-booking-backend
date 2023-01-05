@@ -1,7 +1,9 @@
 # imports 
 from flask import Blueprint, request, jsonify, session
 from ...db import connect_db
-import jwt
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
+
+
 from datetime import datetime, timedelta
 from werkzeug.security import check_password_hash, generate_password_hash
 from functools import wraps
@@ -9,40 +11,40 @@ from ...settings import SECRET_KEY
 from ...models.Employee import Employee
 
 # decorator for verifying the JWT
-def token_required():
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        token = None
-        # jwt is passed in the request header
-        if 'x-access-token' in request.headers:
-            token = request.headers['x-access-token']
-        # return 401 if token is not passed
-        if not token:
-            return jsonify({'message' : 'Token is missing !!'}), 401
+# def token_required():
+#     @wraps(f)
+#     def decorated(*args, **kwargs):
+#         token = None
+#         # jwt is passed in the request header
+#         if 'x-access-token' in request.headers:
+#             token = request.headers['x-access-token']
+#         # return 401 if token is not passed
+#         if not token:
+#             return jsonify({'message' : 'Token is missing !!'}), 401
         
-        try:
-            # decoding the payload to fetch the stored details
-            data = jwt.decode(token, SECRET_KEY)
-            print("data: ", data)
-            current_user_query = '''SELECT * FROM email, password FROM Employee WHERE _id=%(id)s'''
-            db = connect_db()
-            cursor = db.cursor()
-            cursor.execute(current_user_query, data)
-            current_user = cursor.fetchone()
-        except:
-            return jsonify({
-                'message' : 'Token is invalid !!'
-            }), 401
-        # returns the current logged in users contex to the routes
-        return  f(current_user, *args, **kwargs)
+#         try:
+#             # decoding the payload to fetch the stored details
+#             data = jwt.decode(token, SECRET_KEY)
+#             print("data: ", data)
+#             current_user_query = '''SELECT email, password FROM Employee WHERE _id=%(id)s'''
+#             db = connect_db()
+#             cursor = db.cursor()
+#             cursor.execute(current_user_query, data)
+#             current_user = cursor.fetchone()
+#         except:
+#             return jsonify({
+#                 'message' : 'Token is invalid !!'
+#             }), 401
+#         # returns the current logged in users contex to the routes
+#         return  f(current_user, *args, **kwargs)
   
-    return decorated
+#     return decorated
 
 
 # route function for login 
-login_bp = Blueprint('login', __name__, url_prefix='/auth')
+login_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-@login_bp.route('/', methods=['POST'])
+@login_bp.route('/', methods=['POST', 'GET'])
 def login():
     user_credentials = request.get_json()
     db = connect_db()
@@ -61,13 +63,10 @@ def login():
     if not user:
         return {'status': 400, 'message': "User not found."}
 
-    if check_password_hash(user[1] , user_credentials['password']):
-        token = jwt.encode({
-            'public_id': user[0],
-            'exp' : datetime.utcnow() + timedelta(hours=24)
-        }, SECRET_KEY)
+    if user[1] == user_credentials['password']:
+        token = create_access_token(identity = user_credentials["email"])
   
-        return {'token' : token.decode('UTF-8')}
+        return {'token' : token}
 
     # print("request: ",request.get_data())
     return "ok"
