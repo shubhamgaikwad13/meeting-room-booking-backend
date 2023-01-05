@@ -3,7 +3,7 @@ from http import HTTPStatus
 from ...db import connect_db
 from .EmployeeDAO import Employee
 from .service import EmployeeValidation
-
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from .constant import *
 from mysql.connector import errorcode
 from mysql.connector import Error as MySQLError
@@ -112,6 +112,27 @@ def update_employee(id):
     except Exception as e:
         print(e)
         return "404"
+
+
+# User details after verifying token
+@employee_bp.route('/profile', methods=['GET'])
+@jwt_required()
+def profile():
+    try:
+        user_email = get_jwt_identity()
+
+        employee = Employee.get_employee_by_email(str(user_email))
+
+        if employee is not None:
+            return employee
+        
+        return Exception("Token not valid")
+
+    # except DecodeError as e:
+
+        
+    except Exception as e:
+        return({"message" : str(e)})
 
 
 # internal api for fake inserts of employee records

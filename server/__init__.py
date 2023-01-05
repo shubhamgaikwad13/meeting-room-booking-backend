@@ -2,6 +2,9 @@ from flask import Flask
 from .config import ProductionConfig, TestingConfig, DevelopmentConfig
 from .blueprints.employee_module import controller
 import logging
+import os
+from .blueprints.auth_module import login_bp
+from flask_jwt_extended import JWTManager
 
 
 def create_app(test_config=None):
@@ -23,5 +26,8 @@ def create_app(test_config=None):
         logging.getLogger('werkzeug').disabled = True
 
     app.register_blueprint(controller.employee_bp)
+    app.register_blueprint(login_bp.login_bp)
+    app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_KEY")
+    JWTManager(app)
 
     return app
