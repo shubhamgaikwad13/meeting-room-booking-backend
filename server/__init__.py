@@ -1,13 +1,14 @@
 from flask import Flask, g
 from .config import ProductionConfig, TestingConfig, DevelopmentConfig
-from .blueprints.employee_module.controller import employee_bp
 import logging
 import os
-from .blueprints.auth_module.controller import auth_bp
-
 from flask_jwt_extended import JWTManager, get_jwt, get_jwt_identity, set_access_cookies, create_access_token
 from .db import connect_db
 from datetime import datetime, timedelta, timezone
+from .blueprints.auth_module.controller import auth_bp
+from .blueprints.employee_module.controller import employee_bp
+from .blueprints.room_module.controller import room_bp
+
 
 def create_app(test_config=None):
     logging.basicConfig(filename='app.log', filemode='a', level=logging.INFO,
@@ -66,5 +67,6 @@ def create_app(test_config=None):
     #register new blueprints here
     app.register_blueprint(employee_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(room_bp)
     
     return app
