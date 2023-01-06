@@ -4,13 +4,13 @@ from ...db import connect_db
 from .EmployeeDAO import Employee
 from .service import EmployeeValidation
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended.exceptions import JWTDecodeError
 from .constant import *
 from mysql.connector import errorcode
 from mysql.connector import Error as MySQLError
 from ...utils import make_response
 
 employee_bp = Blueprint('employee', __name__, url_prefix='/employee')
-
 
 # connects to db before request if not connected already
 @employee_bp.before_request
@@ -134,26 +134,6 @@ def update_employee(id):
         return make_response(str(e), 'error'), HTTPStatus.BAD_REQUEST
     
 
-# User details after verifying token
-@employee_bp.route('/profile', methods=['GET'])
-@jwt_required()
-def profile():
-    try:
-        user_email = get_jwt_identity()
-
-        employee = Employee.get_employee_by_email(str(user_email))
-
-        if employee is not None:
-            return employee
-        
-        return Exception("Token not valid")
-
-    # except DecodeError as e:
-
-        
-    except Exception as e:
-        return({"message" : str(e)})
-
 
 # internal api for fake inserts of employee records
 @employee_bp.route('/fake', methods=['GET'])
@@ -181,3 +161,24 @@ def fake_inserts():
         g.db.commit()
 
     return "fake records inserted"
+
+
+# User details after verifying token
+@employee_bp.route('/profile', methods=['GET'])
+@jwt_required()
+def profile():
+    try:
+        print("decode : ", JWTDecodeError)
+        user_email = get_jwt_identity()
+
+        employee = Employee.get_employee_by_email(str(user_email))
+
+        if employee is not None:
+            return employee
+        else:
+            return Exception("Token not valid")
+
+    except JWTDecodeError as e:
+        return jsonify({"error" : "token not valid"})
+    except Exception as e:
+        return({"message" : "not valid"})
