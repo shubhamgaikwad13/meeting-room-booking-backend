@@ -27,7 +27,7 @@ class EmployeeValidation:
                 raise Exception(field_required(key))
 
             # checks type of field
-            if type(params.get(key)) is not value['type']:
+            if value['is_required'] and type(params.get(key)) is not value['type']:
                 raise Exception(f"{key} must be of type {value['type']}")
 
             # phone validations
