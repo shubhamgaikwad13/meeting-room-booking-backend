@@ -15,3 +15,5 @@ def field_must_be_type(field, type):
 
 
 def field_required(field): return f"{field} is required."
+
+def dup_message(value): return f"Duplicate entry for {value}."
