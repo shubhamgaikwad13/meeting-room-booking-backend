@@ -37,18 +37,20 @@ def create_app(test_config=None):
     JWTManager(app)
 
 
-    # db connection
+    # db connection before request
     @app.before_request
     def before_request():
         g.db = connect_db()
         print('db connected....')
 
+    # db closing after any request
     @app.after_request
     def after_request(response):
         print('db closed....')
         g.db.close()
         return response
 
+    # cheking if JWT got expired after every request
     @app.after_request
     def refresh_expiring_jwts(response):
         try:
