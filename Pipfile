@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 flask = "*"
+pep8 = "*"
+pylint = "*"
 
 [dev-packages]
 

@@ -1,7 +1,6 @@
 from flask import g
 from ...utils import make_response
 from .constant import *
-import re
 from werkzeug.security import generate_password_hash
 
 
