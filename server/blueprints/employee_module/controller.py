@@ -168,7 +168,6 @@ def fake_inserts():
 @jwt_required()
 def profile():
     try:
-        print("decode : ", JWTDecodeError)
         user_email = get_jwt_identity()
 
         employee = Employee.get_employee_by_email(str(user_email))
@@ -176,9 +175,7 @@ def profile():
         if employee is not None:
             return employee
         else:
-            return Exception("Token not valid")
+            raise Exception("Employee Not Found.")
 
-    except JWTDecodeError as e:
-        return jsonify({"error" : "token not valid"})
     except Exception as e:
-        return({"message" : "not valid"})
+        return({"message" : str(e)})

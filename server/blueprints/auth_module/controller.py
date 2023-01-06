@@ -1,37 +1,19 @@
 # imports 
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify
 from ...db import connect_db
-from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
-import os
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, set_access_cookies, unset_jwt_cookies
 from datetime import datetime, timedelta
-from werkzeug.security import check_password_hash, generate_password_hash
-from functools import wraps
+from werkzeug.security import check_password_hash
 from .constant import *
 from http import HTTPStatus
-
-# secret key from .env
-# SECRET_KEY = os.environ.get("JWT_KEY")
-
-# def verify_token():
-#     @wraps(f)
-#     def decorated(*args, **kwargs):
-#         token = None
-#         # jwt is passed in the request header
-#         if 'x-access-token' in request.headers:
-#             token = request.headers['x-access-token']
-#         # return 401 if token is not passed
-#         if not token:
-#             return jsonify({'message' : 'Token is missing !!'}), 401
-
-
+from datetime import datetime, timedelta, timezone
 
 # route for login
-login_bp = Blueprint('auth', __name__, url_prefix='/auth')
-
+auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
 # route for generating token
-@login_bp.route('/', methods=['POST', 'GET'])
+@auth_bp.route('', methods=['POST', 'GET'])
 def login():
     try:
         user_credentials = request.get_json()
@@ -52,8 +34,12 @@ def login():
             return {'status': 400, 'message': "User not found."}
 
         if check_password_hash(user[1],user_credentials['password']):
-            token = create_access_token(identity = user_credentials["email"])
-            return {'token' : token}
+            response = jsonify({"message": "Login successful."})
+            now = datetime.now(timezone.utc)
+            print("created: ", now)
+            access_token = create_access_token(identity = user_credentials["email"])
+            set_access_cookies(response, access_token)
+            return response
         else:
             return jsonify({"message" : WRONG_PASSWORD})
     
@@ -63,3 +49,16 @@ def login():
 
     except Exception as e:
         return jsonify({"error" : str(e)}), HTTPStatus.BAD_REQUEST
+
+
+@auth_bp.route("/logout", methods=["POST"])
+def logout():
+    response = jsonify({"message": "logout successful"})
+    unset_jwt_cookies(response)
+    return response
+
+
+@auth_bp.route("/protected")
+@jwt_required()
+def protected():
+    return jsonify(foo="bar")

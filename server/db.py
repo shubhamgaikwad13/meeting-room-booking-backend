@@ -11,11 +11,3 @@ def connect_db():
         g.mysql_db = mysql.connector.connect(
             **(current_app.config["DATABASE_URI"]))
     return g.mysql_db
-
-# #.env
-# DATABASE_HOST = "localhost"
-# DATABASE_USER = "shubham"
-# DATABASE_PASSWORD = ""
-# DATABASE_NAME  = "meeting_room"
-
-# todos db close
