@@ -1,4 +1,4 @@
-from flask import g
+from flask import g, jsonify
 from ...utils import make_response
 from .constant import *
 from werkzeug.security import generate_password_hash
@@ -54,6 +54,20 @@ class Employee:
         if record:
             employee = Employee(*record[:9])
             return employee
+    
+    # get employee bt email
+    @staticmethod
+    def get_employee_by_email(user_email):
+        cursor = g.db.cursor()
+
+        query = '''SELECT * from Employee WHERE email = %(email)s'''
+        params = {"email" : user_email}
+        cursor.execute(query, params)
+        record = cursor.fetchone()
+        if record:
+            employee = Employee(*record[:9])
+            # print("emp: ", employee.__dict__)
+            return employee.__dict__
 
     def save(self):
         """Inserts employee record in the database"""
