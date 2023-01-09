@@ -65,7 +65,7 @@ def get_room_by_id(id):
         if room is None:
             return make_response(ROOM_NOT_FOUND), HTTPStatus.OK
 
-        return make_response(data=room.__dict__, key='room'), HTTPStatus.OK
+        return make_response(data=room, key='room'), HTTPStatus.OK
 
     except Exception as e:
         return make_response(data=str(e), key="error"), HTTPStatus.BAD_REQUEST
