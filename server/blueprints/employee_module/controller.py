@@ -12,18 +12,6 @@ from ...utils import make_response
 
 employee_bp = Blueprint('employee', __name__, url_prefix='/employee')
 
-# connects to db before request if not connected already
-@employee_bp.before_request
-def before_request():
-    g.db = connect_db()
-
-
-# closes db connection after each request
-@employee_bp.after_request
-def after_request(response):
-    g.db.close()
-    return response
-
 
 # api for fetching all employees
 @employee_bp.route('/', methods=['GET'])
