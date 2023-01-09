@@ -66,3 +66,10 @@ CREATE TABLE `MeetingMember` (
 	`team_id` int references Team(_id),
 	`attendee_id` int references Employee(_id)
 );
+
+alter table Employee modify column `created_by` varchar(10); 
+alter table Employee modify column `updated_by` varchar(10); 
+alter table Room modify column `created_by` varchar(10); 
+alter table Room modify column `updated_by` varchar(10); 
+alter table Team modify column `created_by` varchar(10); 
+alter table Team modify column `updated_by` varchar(10); 
