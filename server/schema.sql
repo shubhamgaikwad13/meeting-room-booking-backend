@@ -69,3 +69,9 @@ CREATE TABLE `MeetingMember` (
 
 
 ALTER TABLE Employee ADD COLUMN profile_img longblob;
+alter table Employee modify column `created_by` varchar(10); 
+alter table Employee modify column `updated_by` varchar(10); 
+alter table Room modify column `created_by` varchar(10); 
+alter table Room modify column `updated_by` varchar(10); 
+alter table Team modify column `created_by` varchar(10); 
+alter table Team modify column `updated_by` varchar(10); 
