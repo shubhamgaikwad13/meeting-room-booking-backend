@@ -22,17 +22,15 @@ class Room:
         Returns:
             object: Room 
         """
-        cursor = g.db.cursor()
+        cursor = g.db.cursor(dictionary=True)
 
         query = '''SELECT * FROM Room WHERE _id = %(_id)s'''
         params = {'_id': room_id}
         cursor.execute(query, params)
 
-        record = cursor.fetchone()
-        if record:
-            print("rec", record)
-            room = Room(*record[:9])
-            print(room.__dict__)
+        room = cursor.fetchone()
+        
+        if room:
             return room
 
 
@@ -43,14 +41,14 @@ class Room:
         Returns:
             list: List of rooms with each room as a dictionary
         """
-        cursor = g.db.cursor()
-        query = '''SELECT * FROM Room'''
+        cursor = g.db.cursor(dictionary=True)
+        query = '''SELECT _id, title, type, description, capacity, has_microphone, has_projector, has_speakers, has_whiteboard, status FROM Room'''
         cursor.execute(query)
-        records = cursor.fetchall()
-        rooms = []
-        for room_record in records:
-            room = Room(*room_record[:9])
-            rooms.append(room.__dict__)
+        rooms = cursor.fetchall()
+        # rooms = []
+        # for room_record in records:
+        #     room = Room(*room_record[:9])
+        #     rooms.append(room.__dict__)
 
         return rooms
         
