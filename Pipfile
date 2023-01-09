@@ -12,6 +12,10 @@ flask-sqlalchemy = "*"
 flask-jwt-extended = "*"
 pep8 = "*"
 pylint = "*"
+flask-mysql = "*"
+mysql-connector-python = "*"
+python-dotenv = "*"
+flask-sqlalchemy = "*"
 
 [dev-packages]
 
