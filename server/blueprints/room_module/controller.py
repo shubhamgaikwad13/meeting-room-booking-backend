@@ -106,7 +106,7 @@ def update_room_by_id(id):
         if not Employee.is_admin(params['updated_by']):
             raise Exception(ONLY_ADMIN_UPDATES_ROOM)
         
-        # if employee exists then updates otherwise shows error
+        # if room exists then updates otherwise shows error
         room = Room.get_room_by_id(id)
         if room is None:
             return make_response(ROOM_NOT_FOUND), HTTPStatus.BAD_REQUEST

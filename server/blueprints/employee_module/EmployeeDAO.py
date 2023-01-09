@@ -26,14 +26,10 @@ class Employee:
         Returns:
             list: List of employees with each employee as a dictionary
         """
-        cursor = g.db.cursor()
-        query = '''SELECT * FROM Employee WHERE is_active=true'''
+        cursor = g.db.cursor(dictionary=True)
+        query = '''SELECT _id, first_name, last_name, email, phone, designation, is_admin FROM Employee WHERE is_active=true'''
         cursor.execute(query)
-        records = cursor.fetchall()
-        employees = []
-        for employee_record in records:
-            employee = Employee(*employee_record[:9])
-            employees.append(employee.__dict__)
+        employees = cursor.fetchall()
 
         return employees
 
