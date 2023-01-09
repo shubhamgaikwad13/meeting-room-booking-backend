@@ -28,6 +28,14 @@ class RoomValidation:
             if value['is_required'] and type(params.get(key)) is not value['type']:
                 raise Exception(f"{key} must be of type {value['type']}")
 
+            # check if type is meeting or conference
+            if key == 'type' and params.get(key) not in ['meeting', 'conference']:
+                raise Exception("type must be either 'meeting' or 'conference'.")
+
+            print(key, value, params.get(key))
+            if key == 'capacity' and not 3 <= params.get(key) <= 10:
+                raise Exception("capacity must be only between 3 & 10.")
+
 
     @staticmethod
     def validate_update_request(params):
