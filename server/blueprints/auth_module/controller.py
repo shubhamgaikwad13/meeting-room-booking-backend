@@ -13,7 +13,7 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
 # route for generating token
-@auth_bp.route('', methods=['POST', 'GET'])
+@auth_bp.route('/', methods=['POST', 'GET'])
 def login():
     try:
         user_credentials = request.get_json()
@@ -31,7 +31,7 @@ def login():
         user = cursor.fetchone()
         # print("user: ", user_credentials['password'])
         if not user:
-            return {'status': 400, 'message': "User not found."}
+            return {'message': "User not found."}, HTTPStatus.NOT_FOUND
 
         if check_password_hash(user[1],user_credentials['password']):
             response = jsonify({"message": "Login successful."})
