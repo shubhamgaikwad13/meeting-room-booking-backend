@@ -134,7 +134,7 @@ def fake_inserts():
     id = 3000
     phone = 9000000000
 
-    for i in range(3000, 10000):
+    for i in range(3000, 5000):
         params = {
             "_id": i,
             "first_name": "John",
