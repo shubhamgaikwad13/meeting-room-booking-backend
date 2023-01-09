@@ -66,3 +66,6 @@ CREATE TABLE `MeetingMember` (
 	`team_id` int references Team(_id),
 	`attendee_id` int references Employee(_id)
 );
+
+
+ALTER TABLE Employee ADD COLUMN profile_img longblob;
