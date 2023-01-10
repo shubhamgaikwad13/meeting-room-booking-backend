@@ -12,7 +12,7 @@ EmployeeFields = {
     'is_admin': {'is_required': True, 'type': bool},
     'created_by': {'is_required': True, 'type': str},
     'updated_by': {'is_required': False, 'type': str},
-    'profile_img': {'is_required': True, 'type': str}
+    'profile_img': {'is_required': False, 'type': str}
 }
 
 
