@@ -14,6 +14,7 @@ employee_bp = Blueprint('employee', __name__, url_prefix='/employee')
 
 # api for fetching all employees
 @employee_bp.route('/', methods=['GET'])
+@jwt_required()
 def get_employees():
     try:
         employees = Employee.get_employees()  # fetches employees in list
@@ -27,13 +28,14 @@ def get_employees():
 
 # api for fetching employee by id
 @employee_bp.route('/<id>', methods=['GET'])
+@jwt_required()
 def get_employee_by_id(id):
     try:
         employee = Employee.get_employee_by_id(
             id)  # fetches employee in object
 
         if employee is None:
-            return make_response(EMPLOYEE_NOT_FOUND), HTTPStatus.OK
+            return make_response(EMPLOYEE_NOT_FOUND), HTTPStatus.NOT_FOUND
 
         return make_response(data=employee, key='employee'), HTTPStatus.OK
 
