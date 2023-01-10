@@ -75,3 +75,4 @@ alter table Room modify column `created_by` varchar(10);
 alter table Room modify column `updated_by` varchar(10); 
 alter table Team modify column `created_by` varchar(10); 
 alter table Team modify column `updated_by` varchar(10); 
+ALTER TABLE TeamMember ADD CONSTRAINT unique_team_member UNIQUE(team_id, employee_id);
