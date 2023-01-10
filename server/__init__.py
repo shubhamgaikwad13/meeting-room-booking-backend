@@ -8,7 +8,9 @@ from datetime import datetime, timedelta, timezone
 from .blueprints.auth_module.controller import auth_bp
 from .blueprints.employee_module.controller import employee_bp
 from .blueprints.room_module.controller import room_bp
+import logging
 
+logger = logging.getLogger("app_logger")
 
 def create_app(test_config=None):
     logging.basicConfig(filename='app.log', filemode='a', level=logging.INFO,
@@ -41,12 +43,13 @@ def create_app(test_config=None):
     # db connection
     @app.before_request
     def before_request():
+        logger.info("Connected to db.")
         g.db = connect_db()
-        print('db connected....')
+        
 
     @app.after_request
     def after_request(response):
-        print('db closed....')
+        logger.info("Connection to db closed.")
         g.db.close()
         return response
 
