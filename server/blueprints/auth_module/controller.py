@@ -13,7 +13,7 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
 # route for generating token
-@auth_bp.route('', methods=['POST', 'GET'])
+@auth_bp.route('/', methods=['POST', 'GET'])
 def login():
     try:
         user_credentials = request.get_json()
