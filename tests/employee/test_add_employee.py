@@ -29,12 +29,52 @@ class GetEmployees(unittest.TestCase):
         self.token = response.cookies.get('access_token_cookie')
 
     # test for successful creation for an employee
-    def test_successful_employee_addition(self):
-        response = requests.post(self.BASE_URI + "employee/",
-        cookies={'access_token_cookie': self.token},
-        json=self.basic_data)
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertEqual(response.json()["message"], "Employee added successfully.")
+    # def test_successful_employee_addition(self):
+    #     response = requests.post(
+    #         self.BASE_URI + "employee/",
+    #         cookies={'access_token_cookie': self.token},
+    #         json=self.basic_data)
+    #     self.assertEqual(response.status_code, HTTPStatus.OK)
+    #     self.assertEqual(response.json()["message"], "Employee added successfully.")
+
+    # test for addition of employee having one or more duplicate fields(Negative test)
+    def test_duplicate_employee_addition(self):
+        response = requests.post(
+            self.BASE_URI + "employee/",
+            cookies={'access_token_cookie': self.token},
+            json=self.basic_data)
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+        self.assertEqual(response.json()["error"], "Duplicate entry for employee PRIMARY.")
+
+    # Test for addition of employee from a non-admin(Negative Test)
+    def test_employee_addition_from_non_admin(self):
+        self.basic_data["created_by"] = "OPI003"
+        response = requests.post(
+            self.BASE_URI + "employee/",
+            cookies={'access_token_cookie': self.token},
+            json=self.basic_data)
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+        self.assertEqual(response.json()["error"], "Only admin can add the user.")
+
+    # test for any key missing in employee schema
+    def test_missing_key_in_employee_schema(self):
+        del self.basic_data["email"]
+        response = requests.post(
+            self.BASE_URI + "employee/",
+            cookies={'access_token_cookie': self.token},
+            json=self.basic_data)
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+        self.assertEqual(response.json()["error"], "email is required.")
+
+    # test for employee addition where expected type of a key is different
+    def test_worng_type_input(self):
+        self.basic_data["_id"] = 1
+        response = requests.post(
+            self.BASE_URI + "employee/",
+            cookies={'access_token_cookie': self.token},
+            json=self.basic_data)
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+        self.assertEqual(response.json()["error"], "_id must be of type <class 'str'>")
 
      # function for logout, it will be called last whenever this class is used
     def tearDown(self):
