@@ -78,6 +78,7 @@ def add_employee():
 
 # api for deleting an employee by id
 @employee_bp.route('/<id>', methods=['DELETE'])
+@jwt_required()
 def delete_employee_by_id(id):
     try:
         params = request.get_json()
@@ -102,6 +103,7 @@ def delete_employee_by_id(id):
 
 # api for updating employee data - phone, designation, password
 @employee_bp.route('/<id>', methods=['PATCH'])
+@jwt_required()
 def update_employee(id):
     params = request.get_json()
 
