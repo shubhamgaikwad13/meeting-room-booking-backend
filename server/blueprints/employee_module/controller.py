@@ -87,7 +87,7 @@ def delete_employee_by_id(id):
 
         # if employee exists then deletes otherwise shows error
         employee = Employee.get_employee_by_id(id)
-
+        print(employee)
         if employee is None:
             return make_response(EMPLOYEE_NOT_FOUND), HTTPStatus.BAD_REQUEST
 

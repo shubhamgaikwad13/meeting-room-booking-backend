@@ -29,13 +29,13 @@ class GetEmployees(unittest.TestCase):
         self.token = response.cookies.get('access_token_cookie')
 
     # test for successful creation for an employee
-    # def test_successful_employee_addition(self):
-    #     response = requests.post(
-    #         self.BASE_URI + "employee/",
-    #         cookies={'access_token_cookie': self.token},
-    #         json=self.basic_data)
-    #     self.assertEqual(response.status_code, HTTPStatus.OK)
-    #     self.assertEqual(response.json()["message"], "Employee added successfully.")
+    def test_successful_employee_addition(self):
+        response = requests.post(
+            self.BASE_URI + "employee/",
+            cookies={'access_token_cookie': self.token},
+            json=self.basic_data)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(response.json()["message"], "Employee added successfully.")
 
     # test for addition of employee having one or more duplicate fields(Negative test)
     def test_duplicate_employee_addition(self):

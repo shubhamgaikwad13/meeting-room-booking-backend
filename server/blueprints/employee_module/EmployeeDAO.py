@@ -12,7 +12,8 @@ class Employee:
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
-        self.password = generate_password_hash(password)
+        if password is not None:
+            self.password = generate_password_hash(password)
         self.phone = phone
         self.designation = designation
         self.is_active = is_active
@@ -47,8 +48,9 @@ class Employee:
         query = '''SELECT _id, first_name, last_name,email, phone, designation, is_admin, profile_img FROM Employee WHERE _id = %(_id)s AND is_active=true'''
         params = {'_id': employee_id}
         cursor.execute(query, params)
-        employee = cursor.fetchone()
-        if employee:
+        record = cursor.fetchone()
+        if record:
+            employee = Employee(**record)
             return employee
     
 
