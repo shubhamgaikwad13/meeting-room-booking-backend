@@ -37,7 +37,7 @@ def get_employee_by_id(id):
         if employee is None:
             return make_response(EMPLOYEE_NOT_FOUND), HTTPStatus.NOT_FOUND
 
-        return make_response(data=employee, key='employee'), HTTPStatus.OK
+        return make_response(data=employee.__dict__, key='employee'), HTTPStatus.OK
 
     except Exception as e:
         return make_response(data=str(e), key="error"), HTTPStatus.BAD_REQUEST
@@ -45,6 +45,7 @@ def get_employee_by_id(id):
 
 # api for adding an employee to the database
 @employee_bp.route('/', methods=['POST'])
+@jwt_required()
 def add_employee():
     params = request.get_json()
 
