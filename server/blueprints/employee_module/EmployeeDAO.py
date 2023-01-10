@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash
 class Employee:
     __tablename__: 'Employee'
 
-    def __init__(self, _id, first_name, last_name, email, password, phone, designation, is_active=True, is_admin=False, created_by=None, profile_img=None):
+    def __init__(self, _id, first_name, last_name, email, phone, designation, password=None, is_active=True, is_admin=False, created_by=None, profile_img=None):
         self._id = _id
         self.first_name = first_name
         self.last_name = last_name
@@ -48,9 +48,8 @@ class Employee:
         query = '''SELECT _id, first_name, last_name,email, phone, designation, is_admin, profile_img FROM Employee WHERE _id = %(_id)s AND is_active=true'''
         params = {'_id': employee_id}
         cursor.execute(query, params)
-        record = cursor.fetchone()
-        if record:
-            employee = Employee(**record)
+        employee = cursor.fetchone()
+        if employee:
             return employee
     
 
