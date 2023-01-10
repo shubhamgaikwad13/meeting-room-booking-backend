@@ -7,7 +7,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from .constant import *
 from mysql.connector import errorcode
 from mysql.connector import Error as MySQLError
-from ...utils import make_response
+from ...utils import make_response, field_required
 
 employee_bp = Blueprint('employee', __name__, url_prefix='/employee')
 
@@ -95,6 +95,8 @@ def delete_employee_by_id(id):
 
         employee.delete()  # if employee exists then soft deletes its record
 
+    except KeyError as err:
+        return make_response(field_required(err), 'error'), HTTPStatus.BAD_REQUEST
     except Exception as e:
         return make_response(str(e), 'error'), HTTPStatus.BAD_REQUEST
 
