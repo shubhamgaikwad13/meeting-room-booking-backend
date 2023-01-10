@@ -49,7 +49,6 @@ class Employee:
         params = {'_id': employee_id}
         cursor.execute(query, params)
         record = cursor.fetchone()
-        
         if record:
             employee = Employee(**record)
             return employee
