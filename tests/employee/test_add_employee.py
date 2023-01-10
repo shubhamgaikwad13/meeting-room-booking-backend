@@ -12,11 +12,11 @@ class GetEmployees(unittest.TestCase):
 
     basic_data = {
         "_id" : "OPI004",
-        "first_name" : "Subham",
-        "last_name" : "Gaikawad",
-        "email" : "subham.gaikwad@gmail.com",
+        "first_name" : "Tushar",
+        "last_name" : "Ahire",
+        "email" : "tushar.ahire@opcito.com",
         "password" : "Opcito@123",
-        "phone" : "9087654390",
+        "phone" : "7564024284",
         "designation" : "Trainee",
         "is_admin" : False,
         "created_by" : "OPI001"
@@ -28,8 +28,13 @@ class GetEmployees(unittest.TestCase):
         # print(response.cookies.get('access_token_cookie'))
         self.token = response.cookies.get('access_token_cookie')
 
-    # def test_successful_employee_addition(self):
-    #     response = requests.post(self.BASE_URI + "employee/", json=)
+    # test for successful creation for an employee
+    def test_successful_employee_addition(self):
+        response = requests.post(self.BASE_URI + "employee/",
+        cookies={'access_token_cookie': self.token},
+        json=self.basic_data)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(response.json()["message"], "Employee added successfully.")
 
      # function for logout, it will be called last whenever this class is used
     def tearDown(self):
