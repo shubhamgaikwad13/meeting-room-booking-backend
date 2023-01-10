@@ -1,5 +1,3 @@
-import json
-
 class Teams:
     __tablename__: 'Team'
 
@@ -9,16 +7,21 @@ class Teams:
 
     @staticmethod
     def get_teams(teams):
-        data = []
+        teamsList = []
         for team in teams:
-            teams_dict = {
-                'name': team[0],
-                'members':team[1]
+            team = {
+                'TeamName': team[0],
+                'Members': team[1]
             }
-            data.append(teams_dict)
-        return json.dumps(data)
+            teamsList.append(team)
+        return teamsList
 
-
-
-
-
+    @staticmethod
+    def get_team(team):
+        if team[0]:
+            teams_dict = {
+                'TeamName': team[0],
+                'Members': team[1]
+            }
+            return teams_dict
+        return None

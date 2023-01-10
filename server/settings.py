@@ -7,10 +7,10 @@ load_dotenv(dotenv_path)
 
 
 DATABASE_URI = {
-    'user': os.environ.get("DATABASE_USER"),
-    'password': os.environ.get("DATABASE_PASSWORD"),
-    'host': os.environ.get("DATABASE_HOST"),
-    'database': os.environ.get("DATABASE_NAME"),
+    'user': "admin",
+    'password': "Opcito123",
+    'host': "meetingroomdb.cg08rmunlrsf.ap-south-1.rds.amazonaws.com",
+    'database': "meeting_room",
 }
 
 # print(DATABASE_URI)
