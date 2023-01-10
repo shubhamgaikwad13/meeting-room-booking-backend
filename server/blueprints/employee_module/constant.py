@@ -1,4 +1,4 @@
-FETCH_EMPLOYEED_FAILED = "Failed to fetch employee records."
+FETCH_EMPLOYEES_FAILED = "Failed to fetch employee records."
 NO_EMPLOYEES_FOUND = "No employees in the database."
 EMPLOYEE_NOT_FOUND = "Employee not found."
 EMPLOYEE_ADDED = "Employee added successfully."

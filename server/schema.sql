@@ -67,6 +67,8 @@ CREATE TABLE `MeetingMember` (
 	`attendee_id` int references Employee(_id)
 );
 
+
+ALTER TABLE Employee ADD COLUMN profile_img longblob;
 alter table Employee modify column `created_by` varchar(10); 
 alter table Employee modify column `updated_by` varchar(10); 
 alter table Room modify column `created_by` varchar(10); 

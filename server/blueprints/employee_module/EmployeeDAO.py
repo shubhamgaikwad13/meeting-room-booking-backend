@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash
 class Employee:
     __tablename__: 'Employee'
 
-    def __init__(self, _id, first_name, last_name, email, password, phone, designation, is_active=True, is_admin=False, created_by=None):
+    def __init__(self, _id, first_name, last_name, email, password, phone, designation, is_active=True, is_admin=False, created_by=None, profile_img=None):
         self._id = _id
         self.first_name = first_name
         self.last_name = last_name
@@ -18,6 +18,7 @@ class Employee:
         self.is_active = is_active
         self.is_admin = is_admin
         self.created_by = created_by
+        self.profile_img = profile_img
 
     @staticmethod
     def get_employees():
@@ -26,14 +27,10 @@ class Employee:
         Returns:
             list: List of employees with each employee as a dictionary
         """
-        cursor = g.db.cursor()
-        query = '''SELECT * FROM Employee WHERE is_active=true'''
+        cursor = g.db.cursor(dictionary=True)
+        query = '''SELECT _id, first_name, last_name,email, phone, designation, is_admin, profile_img FROM Employee WHERE is_active=true'''
         cursor.execute(query)
-        records = cursor.fetchall()
-        employees = []
-        for employee_record in records:
-            employee = Employee(*employee_record[:9])
-            employees.append(employee.__dict__)
+        employees = cursor.fetchall()
 
         return employees
 
@@ -45,37 +42,35 @@ class Employee:
             object: Employee 
         """
 
-        cursor = g.db.cursor()
+        cursor = g.db.cursor(dictionary=True)
 
-        query = '''SELECT * FROM Employee WHERE _id = %(_id)s AND is_active=true'''
+        query = '''SELECT _id, first_name, last_name,email, phone, designation, is_admin, profile_img FROM Employee WHERE _id = %(_id)s AND is_active=true'''
         params = {'_id': employee_id}
         cursor.execute(query, params)
-        record = cursor.fetchone()
-        if record:
-            employee = Employee(*record[:9])
+        employee = cursor.fetchone()
+        if employee:
             return employee
     
+
     # get employee bt email
     @staticmethod
     def get_employee_by_email(user_email):
-        cursor = g.db.cursor()
+        cursor = g.db.cursor(dictionary=True)
 
-        query = '''SELECT * from Employee WHERE email = %(email)s'''
+        query = '''SELECT _id, first_name, last_name,email, phone, designation, is_admin, profile_img from Employee WHERE email = %(email)s'''
         params = {"email" : user_email}
         cursor.execute(query, params)
-        record = cursor.fetchone()
-        if record:
-            employee = Employee(*record[:9])
-            # print("emp: ", employee.__dict__)
-            return employee.__dict__
-
+        employee = cursor.fetchone()
+        if employee:
+            return employee
+            
     def save(self):
         """Inserts employee record in the database"""
 
         cursor = g.db.cursor()
 
-        query = '''INSERT INTO Employee(_id, first_name, last_name, email, password, phone, designation, is_admin, created_by)
-                VALUES (%(_id)s, %(first_name)s, %(last_name)s, %(email)s, %(password)s, %(phone)s, %(designation)s, %(is_admin)s, %(created_by)s)'''
+        query = '''INSERT INTO Employee(_id, first_name, last_name, email, password, phone, designation, is_admin, created_by, profile_img)
+                VALUES (%(_id)s, %(first_name)s, %(last_name)s, %(email)s, %(password)s, %(phone)s, %(designation)s, %(is_admin)s, %(created_by)s, %(profile_img)s)'''
         cursor.execute(query, self.__dict__)
         g.db.commit()
 
